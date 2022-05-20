@@ -1,0 +1,6 @@
+.vscode/
+*.class
+*.exe
+out/
+*.iml
+*.idea
