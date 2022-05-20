@@ -13,13 +13,13 @@ public class LoanAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
-        throw new IllegalArgumentException("Cannot withdraw rfom loan account.");
+        throw new BankingException("Cannot withdraw from loan account.");
     }
 
     @Override
     public void requestLoan(double amount) {
-        if (amount > super.getLoan() * super.getBank().getMaxLoanPercentageOfLoanAccount()) {
-            throw new IllegalArgumentException("Loan account has MAX LOAN percentage");
+        if (amount > super.getLoan() * super.getBank().getMaxLoanPercentageOfLoanAccount() / 100) {
+            throw new BankingException("Loan account has MAX LOAN percentage");
         }
 
         super.requestLoan(amount);
@@ -37,7 +37,7 @@ public class LoanAccount extends Account {
     public void incrementYear() {
         // loan
         double currentLoan = super.getLoan();
-        currentLoan += currentLoan * super.getBank().getMaxLoanPercentageOfLoanAccount();
+        currentLoan += currentLoan * super.getBank().getMaxLoanPercentageOfLoanAccount() / 100;
         super.setLoan(currentLoan);
     }
 }

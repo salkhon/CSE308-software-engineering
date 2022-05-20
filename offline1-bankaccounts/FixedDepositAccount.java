@@ -7,8 +7,8 @@ public class FixedDepositAccount extends Account {
 
     @Override
     public void deposit(double amount) {
-        if (amount < 50000) {
-            throw new IllegalArgumentException("Fixed Deposit Accounts need to be deposited with larger than 50k.");
+        if (amount < super.getBank().getMinDepositOfFixedDepositAccount()) {
+            throw new BankingException("Fixed Deposit Accounts need to be deposited with larger than 50k.");
         } else {
             super.deposit(amount);
             super.setYearCreated(super.getBank().getCurrentYear());
@@ -18,7 +18,7 @@ public class FixedDepositAccount extends Account {
     @Override
     public void withdraw(double amount) {
         if (super.getBank().getCurrentYear() < super.getYearCreated() + 1) {
-            throw new IllegalArgumentException("FDR maturity not reached");
+            throw new BankingException("FDR maturity not reached");
         }
 
         double currentDeposit = super.getDeposit();
@@ -29,7 +29,7 @@ public class FixedDepositAccount extends Account {
     @Override
     public void requestLoan(double amount) {
         if (amount > super.getBank().getMaxLoanOfFixedDepositAccount()) {
-            throw new IllegalArgumentException("Savings account has MAX LOAN of 100000");
+            throw new BankingException("Savings account has MAX LOAN of 100000");
         }
 
         super.requestLoan(amount);
@@ -51,12 +51,19 @@ public class FixedDepositAccount extends Account {
     public void incrementYear() {
         // deposit
         double currentDeposit = super.getDeposit();
-        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.FIXED_DEPOSIT);
+        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.FIXED_DEPOSIT) / 100;
         super.setDeposit(currentDeposit);
 
         // loan
         double currentLoan = super.getLoan();
-        currentLoan += currentLoan * super.getBank().getLoanInterestRate();
+        currentLoan += currentLoan * super.getBank().getLoanInterestRate() / 100;
         super.setLoan(currentLoan);
+
+        // service charge
+        currentDeposit -= super.getBank().getServiceCharge();
+        if (currentDeposit < 0) {
+            // the money you don't have will be loaned
+            super.setLoan(super.getLoan() + (-currentDeposit));
+        }
     }
 }

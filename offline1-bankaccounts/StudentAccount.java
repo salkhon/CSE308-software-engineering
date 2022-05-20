@@ -9,7 +9,7 @@ public class StudentAccount extends Account {
     @Override
     public void requestLoan(double amount) {
         if (amount > super.getBank().getMaxLoanOfStudentAccount()) {
-            throw new IllegalArgumentException("Student account has loan limit");
+            throw new BankingException("Student account has loan limit");
         }
         super.requestLoan(amount);
     }
@@ -17,7 +17,7 @@ public class StudentAccount extends Account {
     @Override
     public void withdraw(double amount) {
         if (amount > super.getBank().getMaxWithdrawOfStudentAccount()) {
-            throw new IllegalArgumentException("Cannot withdraw more that 10k on student account");
+            throw new BankingException("Cannot withdraw more that 10k on student account");
         }
         super.withdraw(amount);
     }
@@ -38,12 +38,19 @@ public class StudentAccount extends Account {
     public void incrementYear() {
         // deposit
         double currentDeposit = super.getDeposit();
-        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.STUDENT);
+        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.STUDENT) / 100;
         super.setDeposit(currentDeposit);
 
         // loan
         double currentLoan = super.getLoan();
-        currentLoan += currentLoan * super.getBank().getLoanInterestRate();
+        currentLoan += currentLoan * super.getBank().getLoanInterestRate() / 100;
         super.setLoan(currentLoan);
+
+        // service charge
+        currentDeposit -= super.getBank().getServiceCharge();
+        if (currentDeposit < 0) {
+            // the money you don't have will be loaned
+            super.setLoan(super.getLoan() + (-currentDeposit));
+        }
     }
 }

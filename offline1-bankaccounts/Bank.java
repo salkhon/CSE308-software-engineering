@@ -16,11 +16,15 @@ public final class Bank {
     private int currentYear;
 
     private double maxWithdrawOfStudentAccount;
+    private double minDepositOfFixedDepositAccount;
+    private double minBalanceOfSavingsAccount;
 
     private double maxLoanOfSavingsAccount;
     private double maxLoanOfStudentAccount;
     private double maxLoanOfFixedDepositAccount;
     public double maxLoanPercentageOfLoanAccount;
+
+    private double serviceCharge;
 
     private double loanInterestRate;
     private List<Loan> loanRequests;
@@ -38,21 +42,25 @@ public final class Bank {
         this.loanRequests = new ArrayList<>();
 
         this.createDefaultEmployees();
-        System.out.println("Bank Created; M D, S1, S2, C1, C3, C4, C5 created");
+        System.out.println("Bank Created; MD, S1, S2, C1, C3, C4, C5 created");
     }
 
     private void setDefaultAccountParameters() {
         this.maxWithdrawOfStudentAccount = 10000;
+        this.minDepositOfFixedDepositAccount = 50000;
+        this.minBalanceOfSavingsAccount = 1000;
 
         this.maxLoanOfSavingsAccount = 10000;
         this.maxLoanOfStudentAccount = 1000;
         this.maxLoanOfFixedDepositAccount = 100000;
-        this.maxLoanPercentageOfLoanAccount = 0.05;
+        this.maxLoanPercentageOfLoanAccount = 5;
 
-        this.accountTypeToInterestRateMap.put(AccountType.SAVINGS, 0.1);
-        this.accountTypeToInterestRateMap.put(AccountType.STUDENT, 0.05);
-        this.accountTypeToInterestRateMap.put(AccountType.FIXED_DEPOSIT, 0.15);
-        this.loanInterestRate = 0.1;
+        this.serviceCharge = 500;
+
+        this.accountTypeToInterestRateMap.put(AccountType.SAVINGS, 10.0);
+        this.accountTypeToInterestRateMap.put(AccountType.STUDENT, 5.0);
+        this.accountTypeToInterestRateMap.put(AccountType.FIXED_DEPOSIT, 15.0);
+        this.loanInterestRate = 10;
     }
 
     private void createDefaultEmployees() {
@@ -68,7 +76,7 @@ public final class Bank {
 
     public Account createAccount(AccountType accountType, String name, double initialParam) {
         if (this.nameToAccountsMap.containsKey(name)) {
-            throw new IllegalArgumentException("Account with that name already exists");
+            throw new BankingException("Account with that name already exists");
         }
 
         Account account;
@@ -80,7 +88,7 @@ public final class Bank {
             account = new LoanAccount(this, name, initialParam);
         } else {
             if (initialParam < 100000) {
-                throw new IllegalArgumentException("FD Account must have higher init balance");
+                throw new BankingException("FD Account must have higher init balance");
             } else {
                 account = new FixedDepositAccount(this, name, initialParam);
             }
@@ -129,6 +137,30 @@ public final class Bank {
 
         stringBuilder.append(" approved");
         System.out.println(stringBuilder.toString());
+    }
+
+    public double getServiceCharge() {
+        return serviceCharge;
+    }
+
+    public void setServiceCharge(double serviceCharge) {
+        this.serviceCharge = serviceCharge;
+    }
+
+    public double getMinBalanceOfSavingsAccount() {
+        return minBalanceOfSavingsAccount;
+    }
+
+    public void setMinBalanceOfSavingsAccount(double minBalanceOfSavingsAccount) {
+        this.minBalanceOfSavingsAccount = minBalanceOfSavingsAccount;
+    }
+
+    public double getMinDepositOfFixedDepositAccount() {
+        return minDepositOfFixedDepositAccount;
+    }
+
+    public void setMinDepositOfFixedDepositAccount(double minDepositOfFixedDepositAccount) {
+        this.minDepositOfFixedDepositAccount = minDepositOfFixedDepositAccount;
     }
 
     protected void setAccountInterestRate(AccountType accountType, double interestRate) {

@@ -7,8 +7,8 @@ public class SavingsAccount extends Account {
 
     @Override
     public void withdraw(double amount) {
-        if (super.getDeposit() - amount < 1000) {
-            throw new IllegalStateException("Cannot have savings account balance less than 1k.");
+        if (super.getDeposit() - amount < super.getBank().getMinBalanceOfSavingsAccount()) {
+            throw new BankingException("Cannot have savings account balance less than 1k.");
         } else {
             super.withdraw(amount);
         }
@@ -39,12 +39,19 @@ public class SavingsAccount extends Account {
     public void incrementYear() {
         // deposit
         double currentDeposit = super.getDeposit();
-        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.SAVINGS);
+        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.SAVINGS) / 100;
         super.setDeposit(currentDeposit);
 
         // loan
         double currentLoan = super.getLoan();
-        currentLoan += currentLoan * super.getBank().getLoanInterestRate();
+        currentLoan += currentLoan * super.getBank().getLoanInterestRate() / 100;
         super.setLoan(currentLoan);
+
+        // service charge
+        currentDeposit -= super.getBank().getServiceCharge();
+        if (currentDeposit < 0) {
+            // the money you don't have will be loaned
+            super.setLoan(super.getLoan() + (-currentDeposit));
+        }
     }
 }

@@ -21,7 +21,7 @@ public abstract class Account {
 
     public void withdraw(double amount) {
         if (this.deposit - amount < 0) {
-            throw new IllegalStateException("Cannot withdraw more than balance");
+            throw new BankingException("Cannot withdraw more than balance");
         } else {
             this.deposit -= amount;
             System.out.println(amount + "$ withdrawn; current balance " + this.deposit);

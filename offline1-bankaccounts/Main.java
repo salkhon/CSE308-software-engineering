@@ -32,21 +32,21 @@ public class Main {
                     } else if (type.equals("FixedDeposit")) {
                         currentAccount = bank.createAccount(Bank.AccountType.FIXED_DEPOSIT, name, initDeposit);
                     }
-                } catch (IllegalArgumentException e) {
+                } catch (BankingException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
             } else if (option.equals("Deposit") && currentAccount != null) {
                 double amount = Double.parseDouble(input);
                 try {
                     currentAccount.deposit(amount);
-                } catch (IllegalArgumentException e) {
+                } catch (BankingException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
             } else if (option.equals("Withdraw") && currentAccount != null) {
                 double amount = Double.parseDouble(input.replaceAll(",", ""));
                 try {
                     currentAccount.withdraw(amount);
-                } catch (IllegalArgumentException e) {
+                } catch (BankingException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
             } else if (option.equals("Query") && currentAccount != null) {
@@ -82,7 +82,7 @@ public class Main {
             } else if (option.equals("Approve") && currentEmployee != null) {
                 try {
                     currentEmployee.approveLoans();
-                } catch (IllegalArgumentException e) {
+                } catch (BankingException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
             } else if (option.equals("Change") && currentEmployee != null) {
@@ -103,7 +103,7 @@ public class Main {
 
                 try {
                     currentEmployee.setAccountInterestRate(bankAccountType, interestRate);
-                } catch (IllegalArgumentException e) {
+                } catch (BankingException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
             } else if (option.equals("Lookup") && currentEmployee != null) {
@@ -111,7 +111,7 @@ public class Main {
             } else if (option.equals("See") && currentEmployee != null) {
                 try {
                     System.out.println("Internal fund " + currentEmployee.seeInternalFund());
-                } catch (IllegalArgumentException e) {
+                } catch (BankingException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
             } else if (option.equals("INC") && currentAccount == null && currentEmployee == null) {

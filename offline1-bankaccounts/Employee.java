@@ -14,7 +14,7 @@ public abstract class Employee {
 
     public double lookUp(String user) {
         if (!this.bank.getNameToAccountsMap().containsKey(user)) {
-            throw new IllegalArgumentException("Account does not exist");
+            throw new BankingException("Account does not exist");
         }
 
         return this.bank.getNameToAccountsMap().get(user).getDeposit();
