@@ -139,6 +139,10 @@ public final class Bank {
         System.out.println(stringBuilder.toString());
     }
 
+    protected void changeInternalFund(double amount) {
+        this.internalFund += amount;
+    }
+
     public double getServiceCharge() {
         return serviceCharge;
     }
@@ -165,6 +169,7 @@ public final class Bank {
 
     protected void setAccountInterestRate(AccountType accountType, double interestRate) {
         this.accountTypeToInterestRateMap.put(accountType, interestRate);
+        System.out.println(accountType.toString() + " interest rate changed to " + interestRate);
     }
 
     public double getAccountInterestRate(AccountType accountType) {

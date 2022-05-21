@@ -51,7 +51,9 @@ public class FixedDepositAccount extends Account {
     public void incrementYear() {
         // deposit
         double currentDeposit = super.getDeposit();
-        currentDeposit += currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.FIXED_DEPOSIT) / 100;
+        double interestDeposit = currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.FIXED_DEPOSIT)
+                / 100;
+        currentDeposit += interestDeposit;
         super.setDeposit(currentDeposit);
 
         // loan
@@ -60,10 +62,18 @@ public class FixedDepositAccount extends Account {
         super.setLoan(currentLoan);
 
         // service charge
-        currentDeposit -= super.getBank().getServiceCharge();
-        if (currentDeposit < 0) {
-            // the money you don't have will be loaned
-            super.setLoan(super.getLoan() + (-currentDeposit));
+        double serviceCharge = super.getBank().getServiceCharge();
+        double deductibleServiceCharge;
+        if (currentDeposit > serviceCharge) {
+            currentDeposit -= serviceCharge;
+            deductibleServiceCharge = serviceCharge;
+            super.getBank().changeInternalFund(serviceCharge);
+        } else {
+            deductibleServiceCharge = currentDeposit;
+            super.setLoan(super.getLoan() + (serviceCharge - currentDeposit));
         }
+
+        // bank internal fund
+        super.getBank().changeInternalFund(-interestDeposit + deductibleServiceCharge);
     }
 }

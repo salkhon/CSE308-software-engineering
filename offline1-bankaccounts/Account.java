@@ -16,6 +16,7 @@ public abstract class Account {
 
     public void deposit(double amount) {
         this.deposit += amount;
+        this.bank.changeInternalFund(amount);
         System.out.println(amount + "$ deposited; current balance " + this.deposit);
     }
 
@@ -24,6 +25,7 @@ public abstract class Account {
             throw new BankingException("Cannot withdraw more than balance");
         } else {
             this.deposit -= amount;
+            this.bank.changeInternalFund(-amount);
             System.out.println(amount + "$ withdrawn; current balance " + this.deposit);
         }
     }
@@ -33,6 +35,21 @@ public abstract class Account {
     }
 
     public abstract void approveLoan(double amount);
+
+    public void payLoan(double amount) {
+        double payableAmount = this.loan > amount ? amount : this.loan;
+
+        this.loan -= payableAmount;
+        System.out.println("Loan repayed by " + payableAmount + "$. Current Loan " + this.loan + "$");
+
+        double leftoverAmount = amount - payableAmount;
+
+        if (leftoverAmount > 0) {
+            this.deposit(amount);
+        }
+
+        this.bank.changeInternalFund(amount);
+    }
 
     public double getLoan() {
         return this.loan;

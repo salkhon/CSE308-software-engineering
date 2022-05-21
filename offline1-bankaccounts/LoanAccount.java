@@ -8,6 +8,7 @@ public class LoanAccount extends Account {
     @Override
     public void deposit(double amount) {
         super.setLoan(super.getLoan() - amount);
+        super.getBank().changeInternalFund(amount);
         System.out.println(amount + "$ deposited; current loan " + super.getLoan());
     }
 
