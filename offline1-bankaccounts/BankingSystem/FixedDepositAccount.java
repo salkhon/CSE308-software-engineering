@@ -1,3 +1,4 @@
+package BankingSystem;
 public class FixedDepositAccount extends Account {
     protected FixedDepositAccount(Bank bank, String name, double balance) {
         super(bank, name);
@@ -36,7 +37,7 @@ public class FixedDepositAccount extends Account {
     }
 
     @Override
-    public void approveLoan(double amount) {
+    protected void approveLoan(double amount) {
         double currentDeposit = super.getDeposit();
         currentDeposit += amount;
 
@@ -48,7 +49,7 @@ public class FixedDepositAccount extends Account {
     }
 
     @Override
-    public void incrementYear() {
+    protected void incrementYear() {
         // deposit
         double currentDeposit = super.getDeposit();
         double interestDeposit = currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.FIXED_DEPOSIT)

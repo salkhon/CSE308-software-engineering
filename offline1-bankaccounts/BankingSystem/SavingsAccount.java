@@ -1,31 +1,31 @@
-public class StudentAccount extends Account {
-    protected StudentAccount(Bank bank, String name, double balance) {
+package BankingSystem;
+public class SavingsAccount extends Account {
+    protected SavingsAccount(Bank bank, String name, double balance) {
         super(bank, name);
         super.setDeposit(balance);
-        System.out.println("Student account for " + name + " Created; initial balance " + balance + "$");
-
-    }
-
-    @Override
-    public void requestLoan(double amount) {
-        if (amount > super.getBank().getMaxLoanOfStudentAccount()) {
-            // throw new BankingException("Student account has loan limit");
-            throw new BankingException("Invalid transaction; " + this.accountStatement());
-        }
-        super.requestLoan(amount);
+        System.out.println("Savings account for " + name + " Created; initial balance " + balance + "$");
     }
 
     @Override
     public void withdraw(double amount) {
-        if (amount > super.getBank().getMaxWithdrawOfStudentAccount()) {
-            // throw new BankingException("Cannot withdraw more that 10k on student account");
+        if (super.getDeposit() - amount < super.getBank().getMinBalanceOfSavingsAccount()) {
             throw new BankingException("Invalid transaction; " + this.accountStatement());
+        } else {
+            super.withdraw(amount);
         }
-        super.withdraw(amount);
     }
 
     @Override
-    public void approveLoan(double amount) {
+    public void requestLoan(double amount) {
+        if (amount > super.getBank().getMaxLoanOfSavingsAccount()) {
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
+        }
+
+        super.requestLoan(amount);
+    }
+
+    @Override
+    protected void approveLoan(double amount) {
         double currentDeposit = super.getDeposit();
         currentDeposit += amount;
 
@@ -37,10 +37,10 @@ public class StudentAccount extends Account {
     }
 
     @Override
-    public void incrementYear() {
+    protected void incrementYear() {
         // deposit
         double currentDeposit = super.getDeposit();
-        double interestDeposit = currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.STUDENT)
+        double interestDeposit = currentDeposit * super.getBank().getAccountInterestRate(Bank.AccountType.SAVINGS)
                 / 100;
         currentDeposit += interestDeposit;
         super.setDeposit(currentDeposit);
@@ -63,6 +63,7 @@ public class StudentAccount extends Account {
             
             deductibleServiceCharge = currentDeposit;
         }
+
 
         // bank internal fund
         super.getBank().changeInternalFund(-interestDeposit + deductibleServiceCharge);

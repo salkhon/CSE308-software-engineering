@@ -1,3 +1,5 @@
+package BankingSystem;
+
 public abstract class Account {
     private String name;
     private Bank bank;
@@ -34,28 +36,28 @@ public abstract class Account {
         this.bank.requestLoan(this, amount);
     }
 
-    public abstract void approveLoan(double amount);
+    protected abstract void approveLoan(double amount);
 
     public void payLoan(double amount) {
         double payableAmount = this.loan > amount ? amount : this.loan;
 
         this.loan -= payableAmount;
-        System.out.println("Loan repayed by " + payableAmount + "$. " + this.accountStatement());
-
+        
         double leftoverAmount = amount - payableAmount;
-
+        
+        System.out.println("Loan repayed by " + payableAmount + "$. " + this.accountStatement());
         if (leftoverAmount > 0) {
-            this.deposit(amount);
+            System.out.println("Returned " + leftoverAmount);
         }
-
-        this.bank.changeInternalFund(amount);
+        
+        this.bank.changeInternalFund(payableAmount);
     }
 
     public double getLoan() {
         return this.loan;
     }
 
-    public void setLoan(double loan) {
+    protected void setLoan(double loan) {
         this.loan = loan;
     }
 
@@ -63,11 +65,11 @@ public abstract class Account {
         return this.deposit;
     }
 
-    public void setDeposit(double deposit) {
+    protected void setDeposit(double deposit) {
         this.deposit = deposit;
     }
 
-    public abstract void incrementYear();
+    protected abstract void incrementYear();
 
     public String getName() {
         return this.name;
@@ -77,7 +79,7 @@ public abstract class Account {
         return this.bank;
     }
 
-    public void setYearCreated(int yearCreated) {
+    protected void setYearCreated(int yearCreated) {
         this.yearCreated = yearCreated;
     }
 

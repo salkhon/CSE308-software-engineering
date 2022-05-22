@@ -1,5 +1,6 @@
+package BankingSystem;
 public class LoanAccount extends Account {
-    public LoanAccount(Bank bank, String name, double loanAmount) {
+    protected LoanAccount(Bank bank, String name, double loanAmount) {
         super(bank, name);
         super.setLoan(loanAmount);
         System.out.println("Loan account for " + name + " Created; initial loan " + loanAmount + "$");
@@ -7,9 +8,7 @@ public class LoanAccount extends Account {
 
     @Override
     public void deposit(double amount) {
-        super.setLoan(super.getLoan() - amount);
-        super.getBank().changeInternalFund(amount);
-        System.out.println(amount + "$ deposited; " + this.accountStatement());
+        super.payLoan(amount);
     }
 
     @Override
@@ -27,7 +26,7 @@ public class LoanAccount extends Account {
     }
 
     @Override
-    public void approveLoan(double amount) {
+    protected void approveLoan(double amount) {
         double currentLoan = super.getLoan();
         currentLoan += amount;
 
@@ -35,7 +34,7 @@ public class LoanAccount extends Account {
     }
 
     @Override
-    public void incrementYear() {
+    protected void incrementYear() {
         // loan
         double currentLoan = super.getLoan();
         currentLoan += currentLoan * super.getBank().getMaxLoanPercentageOfLoanAccount() / 100;

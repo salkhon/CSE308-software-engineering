@@ -1,3 +1,4 @@
+package BankingSystem;
 public class Cashier extends Employee {
     public Cashier(Bank bank, String name) {
         super(bank, name);

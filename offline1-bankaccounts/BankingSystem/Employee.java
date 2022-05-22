@@ -1,4 +1,4 @@
-
+package BankingSystem;
 public abstract class Employee {
     private Bank bank;
     private String name;
@@ -8,7 +8,7 @@ public abstract class Employee {
         this.name = name;
     }
 
-    public Bank getBank() {
+    protected Bank getBank() {
         return this.bank;
     }
 

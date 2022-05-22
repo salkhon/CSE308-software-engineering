@@ -1,3 +1,5 @@
+package BankingSystem;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,6 +105,122 @@ public final class Bank {
         return null;
     }
 
+    public void incrementYear() {
+        for (Account account : this.nameToAccountsMap.values()) {
+            account.incrementYear();
+        }
+        this.currentYear++;
+        System.out.println("1 year passed");
+    }
+
+    public double getServiceCharge() {
+        return serviceCharge;
+    }
+
+    protected void setServiceCharge(double serviceCharge) {
+        this.serviceCharge = serviceCharge;
+    }
+
+    public double getMinBalanceOfSavingsAccount() {
+        return minBalanceOfSavingsAccount;
+    }
+
+    protected void setMinBalanceOfSavingsAccount(double minBalanceOfSavingsAccount) {
+        this.minBalanceOfSavingsAccount = minBalanceOfSavingsAccount;
+    }
+
+    public double getMinDepositOfFixedDepositAccount() {
+        return minDepositOfFixedDepositAccount;
+    }
+
+    protected void setMinDepositOfFixedDepositAccount(double minDepositOfFixedDepositAccount) {
+        this.minDepositOfFixedDepositAccount = minDepositOfFixedDepositAccount;
+    }
+
+    public double getAccountInterestRate(AccountType accountType) {
+        return this.accountTypeToInterestRateMap.get(accountType);
+    }
+
+    public double getLoanInterestRate() {
+        return loanInterestRate;
+    }
+
+    public int getCurrentYear() {
+        return this.currentYear;
+    }
+
+    public double getMaxLoanPercentageOfLoanAccount() {
+        return maxLoanPercentageOfLoanAccount;
+    }
+
+    protected void setMaxLoanPercentageOfLoanAccount(double maxLoanPercentageOfLoanAccount) {
+        this.maxLoanPercentageOfLoanAccount = maxLoanPercentageOfLoanAccount;
+    }
+
+    public Map<AccountType, Double> getAccountTypeToInterestRateMap() {
+        return accountTypeToInterestRateMap;
+    }
+
+    protected void setAccountTypeToInterestRateMap(Map<AccountType, Double> accountTypeToInterestRateMap) {
+        this.accountTypeToInterestRateMap = accountTypeToInterestRateMap;
+    }
+
+    public double getInternalFund() {
+        return internalFund;
+    }
+
+    protected void setInternalFund(double internalFund) {
+        this.internalFund = internalFund;
+    }
+
+    public double getMaxLoanOfSavingsAccount() {
+        return maxLoanOfSavingsAccount;
+    }
+
+    protected void setMaxLoanOfSavingsAccount(double maxLoanOfSavingsAccount) {
+        this.maxLoanOfSavingsAccount = maxLoanOfSavingsAccount;
+    }
+
+    public double getMaxLoanOfStudentAccount() {
+        return maxLoanOfStudentAccount;
+    }
+
+    protected void setMaxLoanOfStudentAccount(double maxLoanOfStudentAccount) {
+        this.maxLoanOfStudentAccount = maxLoanOfStudentAccount;
+    }
+
+    public double getMaxLoanOfFixedDepositAccount() {
+        return maxLoanOfFixedDepositAccount;
+    }
+
+    protected void setMaxLoanOfFixedDepositAccount(double maxLoanOfFixedDepositAccount) {
+        this.maxLoanOfFixedDepositAccount = maxLoanOfFixedDepositAccount;
+    }
+
+    public double getMaxWithdrawOfStudentAccount() {
+        return maxWithdrawOfStudentAccount;
+    }
+
+    protected void setMaxWithdrawOfStudentAccount(double maxWithdrawOfStudentAccount) {
+        this.maxWithdrawOfStudentAccount = maxWithdrawOfStudentAccount;
+    }
+
+    public double getAccountDeposit(String name) {
+        return this.nameToAccountsMap.get(name).getDeposit();
+    }
+
+    public Account getAccountByName(String name) {
+        return this.nameToAccountsMap.get(name);
+    }
+
+    public Employee getEmployeeByName(String name) {
+        return this.nameToEmployeeMap.get(name);
+    }
+
+    public boolean areLoanApprovalsPending() {
+        return this.loanRequests.size() != 0;
+    }
+
     protected Map<String, Account> getNameToAccountsMap() {
         return this.nameToAccountsMap;
     }
@@ -114,14 +232,6 @@ public final class Bank {
     protected void requestLoan(Account account, double amount) {
         this.loanRequests.add(new Loan(account.getName(), amount));
         System.out.println("Loan request successful, sent for approval");
-    }
-
-    protected void incrementYear() {
-        for (Account account : this.nameToAccountsMap.values()) {
-            account.incrementYear();
-        }
-        this.currentYear++;
-        System.out.println("1 year passed");
     }
 
     protected void approveLoans() {
@@ -144,121 +254,13 @@ public final class Bank {
         this.internalFund += amount;
     }
 
-    public double getServiceCharge() {
-        return serviceCharge;
-    }
-
-    public void setServiceCharge(double serviceCharge) {
-        this.serviceCharge = serviceCharge;
-    }
-
-    public double getMinBalanceOfSavingsAccount() {
-        return minBalanceOfSavingsAccount;
-    }
-
-    public void setMinBalanceOfSavingsAccount(double minBalanceOfSavingsAccount) {
-        this.minBalanceOfSavingsAccount = minBalanceOfSavingsAccount;
-    }
-
-    public double getMinDepositOfFixedDepositAccount() {
-        return minDepositOfFixedDepositAccount;
-    }
-
-    public void setMinDepositOfFixedDepositAccount(double minDepositOfFixedDepositAccount) {
-        this.minDepositOfFixedDepositAccount = minDepositOfFixedDepositAccount;
-    }
-
     protected void setAccountInterestRate(AccountType accountType, double interestRate) {
         this.accountTypeToInterestRateMap.put(accountType, interestRate);
         System.out.println(accountType.toString() + " interest rate changed to " + interestRate);
     }
 
-    public double getAccountInterestRate(AccountType accountType) {
-        return this.accountTypeToInterestRateMap.get(accountType);
-    }
-
     protected void setLoanInterestRate(double loanInterestRate) {
         this.loanInterestRate = loanInterestRate;
-    }
-
-    public double getLoanInterestRate() {
-        return loanInterestRate;
-    }
-
-    public int getCurrentYear() {
-        return this.currentYear;
-    }
-
-    public double getMaxLoanPercentageOfLoanAccount() {
-        return maxLoanPercentageOfLoanAccount;
-    }
-
-    public void setMaxLoanPercentageOfLoanAccount(double maxLoanPercentageOfLoanAccount) {
-        this.maxLoanPercentageOfLoanAccount = maxLoanPercentageOfLoanAccount;
-    }
-
-    public Map<AccountType, Double> getAccountTypeToInterestRateMap() {
-        return accountTypeToInterestRateMap;
-    }
-
-    public void setAccountTypeToInterestRateMap(Map<AccountType, Double> accountTypeToInterestRateMap) {
-        this.accountTypeToInterestRateMap = accountTypeToInterestRateMap;
-    }
-
-    public double getInternalFund() {
-        return internalFund;
-    }
-
-    public void setInternalFund(double internalFund) {
-        this.internalFund = internalFund;
-    }
-
-    public double getMaxLoanOfSavingsAccount() {
-        return maxLoanOfSavingsAccount;
-    }
-
-    public void setMaxLoanOfSavingsAccount(double maxLoanOfSavingsAccount) {
-        this.maxLoanOfSavingsAccount = maxLoanOfSavingsAccount;
-    }
-
-    public double getMaxLoanOfStudentAccount() {
-        return maxLoanOfStudentAccount;
-    }
-
-    public void setMaxLoanOfStudentAccount(double maxLoanOfStudentAccount) {
-        this.maxLoanOfStudentAccount = maxLoanOfStudentAccount;
-    }
-
-    public double getMaxLoanOfFixedDepositAccount() {
-        return maxLoanOfFixedDepositAccount;
-    }
-
-    public void setMaxLoanOfFixedDepositAccount(double maxLoanOfFixedDepositAccount) {
-        this.maxLoanOfFixedDepositAccount = maxLoanOfFixedDepositAccount;
-    }
-
-    public double getMaxWithdrawOfStudentAccount() {
-        return maxWithdrawOfStudentAccount;
-    }
-
-    public void setMaxWithdrawOfStudentAccount(double maxWithdrawOfStudentAccount) {
-        this.maxWithdrawOfStudentAccount = maxWithdrawOfStudentAccount;
-    }
-
-    public double getAccountDeposit(String name) {
-        return this.nameToAccountsMap.get(name).getDeposit();
-    }
-
-    public Account getAccountByName(String name) {
-        return this.nameToAccountsMap.get(name);
-    }
-
-    public Employee getEmployeeByName(String name) {
-        return this.nameToEmployeeMap.get(name);
-    }
-
-    public boolean areLoanApprovalsPending() {
-        return this.loanRequests.size() != 0;
     }
 
     protected static class Loan {
