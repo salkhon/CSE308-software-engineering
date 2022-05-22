@@ -1,5 +1,5 @@
 public class SavingsAccount extends Account {
-    public SavingsAccount(Bank bank, String name, double balance) {
+    protected SavingsAccount(Bank bank, String name, double balance) {
         super(bank, name);
         super.setDeposit(balance);
         System.out.println("Savings account for " + name + " Created; initial balance " + balance + "$");
@@ -8,7 +8,7 @@ public class SavingsAccount extends Account {
     @Override
     public void withdraw(double amount) {
         if (super.getDeposit() - amount < super.getBank().getMinBalanceOfSavingsAccount()) {
-            throw new BankingException("Cannot have savings account balance less than 1k.");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         } else {
             super.withdraw(amount);
         }
@@ -17,7 +17,7 @@ public class SavingsAccount extends Account {
     @Override
     public void requestLoan(double amount) {
         if (amount > super.getBank().getMaxLoanOfSavingsAccount()) {
-            throw new IllegalArgumentException("Savingf account account has MAX LOAN ");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         }
 
         super.requestLoan(amount);
@@ -54,12 +54,15 @@ public class SavingsAccount extends Account {
         double deductibleServiceCharge;
         if (currentDeposit > serviceCharge) {
             currentDeposit -= serviceCharge;
+            super.setDeposit(currentDeposit);
+
             deductibleServiceCharge = serviceCharge;
-            super.getBank().changeInternalFund(serviceCharge);
         } else {
-            deductibleServiceCharge = currentDeposit;
             super.setLoan(super.getLoan() + (serviceCharge - currentDeposit));
+            
+            deductibleServiceCharge = currentDeposit;
         }
+
 
         // bank internal fund
         super.getBank().changeInternalFund(-interestDeposit + deductibleServiceCharge);

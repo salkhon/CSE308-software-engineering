@@ -8,7 +8,7 @@ public abstract class Account {
 
     // loan account effective loan is: loan - deposit.
 
-    public Account(Bank bank, String name) {
+    protected Account(Bank bank, String name) {
         this.bank = bank;
         this.name = name;
         this.yearCreated = bank.getCurrentYear();
@@ -17,7 +17,7 @@ public abstract class Account {
     public void deposit(double amount) {
         this.deposit += amount;
         this.bank.changeInternalFund(amount);
-        System.out.println(amount + "$ deposited; current balance " + this.deposit);
+        System.out.println(amount + "$ deposited; " + this.accountStatement());
     }
 
     public void withdraw(double amount) {
@@ -26,7 +26,7 @@ public abstract class Account {
         } else {
             this.deposit -= amount;
             this.bank.changeInternalFund(-amount);
-            System.out.println(amount + "$ withdrawn; current balance " + this.deposit);
+            System.out.println(amount + "$ withdrawn; " + this.accountStatement());
         }
     }
 
@@ -40,7 +40,7 @@ public abstract class Account {
         double payableAmount = this.loan > amount ? amount : this.loan;
 
         this.loan -= payableAmount;
-        System.out.println("Loan repayed by " + payableAmount + "$. Current Loan " + this.loan + "$");
+        System.out.println("Loan repayed by " + payableAmount + "$. " + this.accountStatement());
 
         double leftoverAmount = amount - payableAmount;
 
@@ -83,5 +83,13 @@ public abstract class Account {
 
     public int getYearCreated() {
         return this.yearCreated;
+    }
+
+    public String accountStatement() {
+        String print = "Current balance: " + this.deposit + "$";
+        if (this.loan > 0) {
+            print += ", loan " + this.loan + "$";
+        }
+        return print;
     }
 }

@@ -9,18 +9,18 @@ public class LoanAccount extends Account {
     public void deposit(double amount) {
         super.setLoan(super.getLoan() - amount);
         super.getBank().changeInternalFund(amount);
-        System.out.println(amount + "$ deposited; current loan " + super.getLoan());
+        System.out.println(amount + "$ deposited; " + this.accountStatement());
     }
 
     @Override
     public void withdraw(double amount) {
-        throw new BankingException("Cannot withdraw from loan account.");
+        throw new BankingException("Invalid transaction; " + this.accountStatement());
     }
 
     @Override
     public void requestLoan(double amount) {
         if (amount > super.getLoan() * super.getBank().getMaxLoanPercentageOfLoanAccount() / 100) {
-            throw new BankingException("Loan account has MAX LOAN percentage");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         }
 
         super.requestLoan(amount);
@@ -40,5 +40,10 @@ public class LoanAccount extends Account {
         double currentLoan = super.getLoan();
         currentLoan += currentLoan * super.getBank().getMaxLoanPercentageOfLoanAccount() / 100;
         super.setLoan(currentLoan);
+    }
+
+    @Override
+    public String accountStatement() {
+        return "current loan " + this.getLoan() + "$";
     }
 }

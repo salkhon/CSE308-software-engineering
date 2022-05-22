@@ -59,14 +59,17 @@ public class Main {
                     }
                 } else if (option.equals("Query") && currentAccount != null) {
                     if (currentAccount.getLoan() > 0) {
-                        System.out.println("Current balance " + currentAccount.getDeposit() + ", loan "
-                                + currentAccount.getLoan() + "$");
+                        System.out.println(currentAccount.accountStatement());
                     } else {
                         System.out.println("Current balance " + currentAccount.getDeposit());
                     }
                 } else if (option.equals("Request") && currentAccount != null) {
                     double amount = Double.parseDouble(input);
-                    currentAccount.requestLoan(amount);
+                    try {
+                        currentAccount.requestLoan(amount);
+                    } catch (BankingException e) {
+                        System.out.println(e.getLocalizedMessage());
+                    }
                 } else if (option.equals("Close") && (currentAccount != null || currentEmployee != null)) {
                     if (currentAccount != null) {
                         System.out.println("Transaction Closed for " + currentAccount.getName());
@@ -115,16 +118,10 @@ public class Main {
                         System.out.println(e.getLocalizedMessage());
                     }
                 } else if (option.equals("Lookup") && currentEmployee != null) {
-                    Account account = bank.getAccountByName(input);
-                    if (account == null) {
-                        throw new BankingException("No account by that name");
-                    }
-
-                    if (account.getLoan() > 0) {
-                        System.out.println(input + "'s current balance " + bank.getAccountDeposit(input)
-                                + "; current loan " + account.getLoan() + "$");
-                    } else {
-                        System.out.println(input + "'s current balance " + bank.getAccountDeposit(input));
+                    try {
+                        System.out.println(currentEmployee.lookUp(input));
+                    } catch (BankingException e) {
+                        System.out.println(e.getLocalizedMessage());
                     }
                 } else if (option.equals("See") && currentEmployee != null) {
                     try {

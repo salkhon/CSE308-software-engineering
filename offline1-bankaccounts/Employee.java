@@ -12,12 +12,12 @@ public abstract class Employee {
         return this.bank;
     }
 
-    public double lookUp(String user) {
+    public String lookUp(String user) {
         if (!this.bank.getNameToAccountsMap().containsKey(user)) {
             throw new BankingException("Account does not exist");
         }
 
-        return this.bank.getNameToAccountsMap().get(user).getDeposit();
+        return user + "'s " + this.bank.getAccountByName(user).accountStatement();
     }
 
     public abstract void approveLoans();

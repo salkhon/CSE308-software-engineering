@@ -1,5 +1,5 @@
 public class FixedDepositAccount extends Account {
-    public FixedDepositAccount(Bank bank, String name, double balance) {
+    protected FixedDepositAccount(Bank bank, String name, double balance) {
         super(bank, name);
         super.setDeposit(balance);
         System.out.println("Fixed Deposit account for " + name + " Created; initial balance " + balance + "$");
@@ -8,7 +8,7 @@ public class FixedDepositAccount extends Account {
     @Override
     public void deposit(double amount) {
         if (amount < super.getBank().getMinDepositOfFixedDepositAccount()) {
-            throw new BankingException("Fixed Deposit Accounts need to be deposited with larger than 50k.");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         } else {
             super.deposit(amount);
             super.setYearCreated(super.getBank().getCurrentYear());
@@ -18,7 +18,7 @@ public class FixedDepositAccount extends Account {
     @Override
     public void withdraw(double amount) {
         if (super.getBank().getCurrentYear() < super.getYearCreated() + 1) {
-            throw new BankingException("FDR maturity not reached");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         }
 
         double currentDeposit = super.getDeposit();
@@ -29,7 +29,7 @@ public class FixedDepositAccount extends Account {
     @Override
     public void requestLoan(double amount) {
         if (amount > super.getBank().getMaxLoanOfFixedDepositAccount()) {
-            throw new BankingException("Savings account has MAX LOAN of 100000");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         }
 
         super.requestLoan(amount);
@@ -66,11 +66,13 @@ public class FixedDepositAccount extends Account {
         double deductibleServiceCharge;
         if (currentDeposit > serviceCharge) {
             currentDeposit -= serviceCharge;
+            super.setDeposit(currentDeposit);
+
             deductibleServiceCharge = serviceCharge;
-            super.getBank().changeInternalFund(serviceCharge);
         } else {
-            deductibleServiceCharge = currentDeposit;
             super.setLoan(super.getLoan() + (serviceCharge - currentDeposit));
+
+            deductibleServiceCharge = currentDeposit;
         }
 
         // bank internal fund

@@ -88,7 +88,7 @@ public final class Bank {
             account = new LoanAccount(this, name, initialParam);
         } else {
             if (initialParam < 100000) {
-                throw new BankingException("FD Account must have higher init balance");
+                throw new BankingException("Invalid transaction.");
             } else {
                 account = new FixedDepositAccount(this, name, initialParam);
             }
@@ -125,7 +125,7 @@ public final class Bank {
     }
 
     protected void approveLoans() {
-        StringBuilder stringBuilder = new StringBuilder("Loans for");
+        StringBuilder stringBuilder = new StringBuilder("Loan for");
 
         for (Loan loan : this.loanRequests) {
             Account account = this.nameToAccountsMap.get(loan.name);
@@ -133,6 +133,7 @@ public final class Bank {
 
             stringBuilder.append(" " + account.getName() + ",");
         }
+        stringBuilder.replace(stringBuilder.lastIndexOf(","), stringBuilder.lastIndexOf(",") + 1, "");
         this.loanRequests.clear();
 
         stringBuilder.append(" approved");

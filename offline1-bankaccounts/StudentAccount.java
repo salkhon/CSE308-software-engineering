@@ -1,5 +1,5 @@
 public class StudentAccount extends Account {
-    public StudentAccount(Bank bank, String name, double balance) {
+    protected StudentAccount(Bank bank, String name, double balance) {
         super(bank, name);
         super.setDeposit(balance);
         System.out.println("Student account for " + name + " Created; initial balance " + balance + "$");
@@ -9,7 +9,8 @@ public class StudentAccount extends Account {
     @Override
     public void requestLoan(double amount) {
         if (amount > super.getBank().getMaxLoanOfStudentAccount()) {
-            throw new BankingException("Student account has loan limit");
+            // throw new BankingException("Student account has loan limit");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         }
         super.requestLoan(amount);
     }
@@ -17,7 +18,8 @@ public class StudentAccount extends Account {
     @Override
     public void withdraw(double amount) {
         if (amount > super.getBank().getMaxWithdrawOfStudentAccount()) {
-            throw new BankingException("Cannot withdraw more that 10k on student account");
+            // throw new BankingException("Cannot withdraw more that 10k on student account");
+            throw new BankingException("Invalid transaction; " + this.accountStatement());
         }
         super.withdraw(amount);
     }
@@ -53,11 +55,13 @@ public class StudentAccount extends Account {
         double deductibleServiceCharge;
         if (currentDeposit > serviceCharge) {
             currentDeposit -= serviceCharge;
+            super.setDeposit(currentDeposit);
+
             deductibleServiceCharge = serviceCharge;
-            super.getBank().changeInternalFund(serviceCharge);
         } else {
-            deductibleServiceCharge = currentDeposit;
             super.setLoan(super.getLoan() + (serviceCharge - currentDeposit));
+            
+            deductibleServiceCharge = currentDeposit;
         }
 
         // bank internal fund
