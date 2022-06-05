@@ -10,7 +10,6 @@ import QueueManagement.QueueManagementSystem.QMS;
 import QueueManagement.QueueManagementSystem.QMSBuilder;
 
 class Main {
-
     public static void main(String[] args) {
         System.out.print("Number of display units: ");
 
@@ -33,7 +32,7 @@ class Main {
 
         if (qmsBuilder != null) {
             qmsBuilder.buildDisplayUnit();
-            System.out.print("Type of comunication system: ");
+            System.out.print("Type of communication system: ");
             input = scanner.nextLine();
 
             if (input.equalsIgnoreCase("wifi")) {

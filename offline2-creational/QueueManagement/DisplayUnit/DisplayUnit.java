@@ -5,7 +5,7 @@ import QueueManagement.DisplayUnit.DisplaySystem.DisplaySystem;
 
 public class DisplayUnit {
     private DisplaySystem displaySystem;
-    private Controller controller; 
+    private Controller controller;
 
     public DisplayUnit(DisplaySystem displaySystem, Controller controller) {
         this.displaySystem = displaySystem;
@@ -14,15 +14,15 @@ public class DisplayUnit {
 
     public double getPurchaseCost() {
         return this.displaySystem.getPurchaseCost() + this.controller.getPurchaseCost();
-    }  
-    
+    }
+
     @Override
     public String toString() {
         final String INDENT = "\t\t";
         String str = INDENT + "Display System: ";
-        str += INDENT + INDENT + this.displaySystem + "\n";
+        str += INDENT + this.displaySystem + "\n";
         str += INDENT + "Controller: ";
-        str += INDENT + INDENT + this.controller + "\n";
+        str += INDENT + this.controller + "\n";
         return str;
     }
 }
